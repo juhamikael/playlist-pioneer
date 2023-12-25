@@ -67,7 +67,7 @@ function LandingPage() {
                 alt="Playlist Pioneer"
                 width={600}
                 height={600}
-                className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center sm:w-full border" />
+                className="hidden lg:block mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center sm:w-full border" />
               <div className="flex flex-col justify-center space-y-4">
                 <div className="space-y-2">
                   <Badge>
@@ -79,21 +79,17 @@ function LandingPage() {
                   </p>
                 </div>
               </div>
+              <Image
+                src="/screenshot2.png"
+                alt="Playlist Pioneer"
+                width={600}
+                height={600}
+                className="block lg:hidden mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center sm:w-full border" />
             </div>
           </div>
         </section>
       </main>
-      <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t">
-        <p className="text-xs text-gray-500 dark:text-gray-400">© PlaylistPioneer. All rights reserved.</p>
-        <nav className="sm:ml-auto flex gap-4 sm:gap-6">
-          <Link className="text-xs hover:underline underline-offset-4" href="#">
-            Terms of Service
-          </Link>
-          <Link className="text-xs hover:underline underline-offset-4" href="#">
-            Privacy
-          </Link>
-        </nav>
-      </footer>
+
     </>
   )
 }
