@@ -8,17 +8,27 @@ import CustomLink from "../global/CustomLink";
 import { Settings } from "lucide-react"
 import Preferences from "../Preferences";
 import { Menu } from "lucide-react"
-import { useState } from "react";
+// Convert Drawer to Sheet until there is from top support
+// import {
+//     Drawer,
+//     DrawerClose,
+//     DrawerContent,
+//     DrawerDescription,
+//     DrawerHeader,
+//     DrawerTitle,
+//     DrawerTrigger,
+//     DrawerFooter,
+// } from "@/components/ui/drawer"
+
 import {
-    Drawer,
-    DrawerClose,
-    DrawerContent,
-    DrawerDescription,
-    DrawerHeader,
-    DrawerTitle,
-    DrawerTrigger,
-    DrawerFooter,
-} from "@/components/ui/drawer"
+    Sheet,
+    SheetContent,
+    SheetDescription,
+    SheetHeader,
+    SheetTitle,
+    SheetTrigger,
+} from "@/components/ui/sheet"
+import Divider from "./Divider";
 
 const Links = [
     {
@@ -60,7 +70,28 @@ const NavBar = ({ }) => {
                     <MenuItems />
                 </div>
 
-                <Drawer>
+                <Sheet>
+                    <SheetTrigger><Menu className="lg:hidden mx-4 hover" size={32} /></SheetTrigger>
+                    <SheetContent side={"top"}>
+                        <SheetHeader>
+                            <SheetTitle>Navigation Menu</SheetTitle>
+                        </SheetHeader>
+                        <Divider className="my-4" />
+                        <div className="flex flex-col gap-y-4 my-2 text-center">
+
+                            {
+                                isLoaded && isSignedIn && (
+                                    <CustomLink href="/bookmarks" asLink>
+                                        Bookmarks
+                                    </CustomLink>
+                                )
+                            }
+                            <MenuItems />
+                        </div>
+                    </SheetContent>
+                </Sheet>
+
+                {/* <Drawer >
                     <DrawerTrigger>
                         <Menu className="lg:hidden mx-4 hover" size={32} />
                     </DrawerTrigger>
@@ -83,7 +114,7 @@ const NavBar = ({ }) => {
                         </DrawerHeader>
 
                     </DrawerContent>
-                </Drawer>
+                </Drawer> */}
                 {
                     isLoaded && isSignedIn ? (
                         <div className="flex items-center gap-x-5">
