@@ -87,17 +87,11 @@ const CookieBanner = () => {
           </CardContent>
           <Divider />
           <CardFooter className={cn("flex justify-around")}>
-            <CustomLink
-              asButton
-              href="https://google.com"
-            >
-              Decline
-            </CustomLink>
             <Button
               variant="outline"
               onClick={handleSave}
               type="submit">
-              Accept
+              Save Preferences
             </Button>
           </CardFooter>
         </Card>
