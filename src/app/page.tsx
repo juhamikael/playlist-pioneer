@@ -4,11 +4,18 @@ import { getToken } from "@/utils/getToken"
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import GetRecommendations from "@/components/GetRecommendations";
 import LandingPage from "@/components/LandingPage";
+import CookieBanner from "@/components/global/CookieBanner";
+
 
 export default async function Home() {
   const user = await currentUser()
   if (!user) {
-    return <MaxWidthWrapper><LandingPage /></MaxWidthWrapper>
+    return (
+      <MaxWidthWrapper>
+        <LandingPage />
+        <CookieBanner />
+      </MaxWidthWrapper>
+    )
   }
   const token = await getToken()
   const spotifyUserId = user?.externalAccounts[0].id
@@ -20,7 +27,7 @@ export default async function Home() {
   }
 
   return (
-    <MaxWidthWrapper className="h-screen">
+    <MaxWidthWrapper>
       {isAuth &&
         (
           <GetRecommendations
