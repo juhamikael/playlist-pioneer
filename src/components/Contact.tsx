@@ -9,6 +9,26 @@ import { useEffect, useState } from "react"
 import { cn } from "@/lib/utils"
 import { ChevronRightCircle, ChevronDownCircle } from "lucide-react"
 
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
+
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
+
+const formSchema = z.object({
+  name: z.string().min(2).max(50),
+  email: z.string().email(),
+  message: z.string().min(10).max(800),
+})
+
 export function Contact() {
   const [step, setStep] = useState(1)
   const [showContact, setShowContact] = useState(false)
@@ -17,8 +37,25 @@ export function Contact() {
     setShowContact(false)
   }, [])
 
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      message: "",
+    },
+  })
+
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    fetch("/api/contact", {
+      method: "POST",
+      body: JSON.stringify(values)
+    })
+
+  }
+
   return (
-    <main className=" mx-auto space-y-8">
+    <main className="mx-auto space-y-8">
       <div className="flex items-center gap-x-4 hover:cursor-pointer"
         onClick={() => setShowContact(!showContact)}
       >
@@ -29,82 +66,110 @@ export function Contact() {
       </div>
 
       {showContact &&
-        <>
-          {
-            step === 1 && (
-              <Card className="bg-[#f7f7f7] p-8 rounded-md">
-                <CardHeader>
-                  <h2 className="text-2xl font-bold">{"Found a bug, have a question, or just want to say hi?"}</h2>
-                  <Badge className={cn("w-fit")}>Step 1 of 3</Badge>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-500">{"We promise this won't take long. Let's start with your name."}</p>
-                  <div className="space-y-2">
-                    <Label htmlFor="name">Name</Label>
-                    <Input id="name" placeholder="Enter your name" />
-                    <Button
-                      onClick={() => setStep(2)}
-                    >Next</Button>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <Card className="bg-[#f7f7f7] p-8 rounded-md">
+              <CardHeader>
+                <h2 className="text-2xl font-bold">
+                  {step === 1 ? "Found a bug, have a question, or just want to say hi?" :
+                    step === 2 ? "Your Email" :
+                      "Your Message"}
+                </h2>
+                <Badge className={cn("w-fit")}>Step {step} of 3</Badge>
+              </CardHeader>
+              <CardContent>
+                {step === 1 && (
+                  <>
+                    <FormField
+                      control={form.control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Name</FormLabel>
+                          <FormDescription>
+                            {"We promise this won't take long. Let's start with your name."}
+                          </FormDescription>
+                          <FormControl>
+                            <Input placeholder="shadcn" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                          <Button
+                            onClick={() => setStep(2)}
+                            disabled={!!form.formState.errors.name || form.getValues("name") === ""}
+                          >
+                            Next
+                          </Button>
+                        </FormItem>
+                      )}
+                    />
 
-          {
-            step === 2 && (
-              <Card className="bg-[#f7f7f7] p-8 rounded-md">
-                <CardHeader>
-                  <h2 className="text-2xl font-bold">Step 2: Your Email</h2>
-                  <Badge className={cn("w-fit")}>Step 2 of 3</Badge>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-500">Great, now we need a way to get back to you.</p>
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
-                    <Input id="email" placeholder="Enter your email" type="email" />
-                    <div className="flex gap-x-4">
-                      <Button variant={"outline"} onClick={() => setStep(1)}>
-                        Previous
-                      </Button>
-                      <Button variant={"outline"} onClick={() => setStep(3)}
-                      >Next</Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            )
-          }
-          {
-            step === 3 && (
-              <Card className="bg-[#f7f7f7] p-8 rounded-md">
-                <CardHeader>
-                  <h2 className="text-2xl font-bold">Final Step: Your Message</h2>
-                  <Badge className={cn("w-fit")}>Step 3 of 3</Badge>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-500">Now the fun part, tell us all the details!</p>
-                  <div className="space-y-2">
-                    <Label htmlFor="message">Message</Label>
-                    <Textarea className="min-h-[100px]" id="message" placeholder="Enter your message" />
-                    <div className="flex gap-x-4">
+                  </>
+                )}
 
-                      <Button variant={"outline"} onClick={() => setStep(2)}>
-                        Previous
-                      </Button>
-                      <Button
-                        onClick={() => setStep(2)}
-                        variant={"outline"}
-                        className={cn("mr-right")}
-                      >Submit</Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            )
-          }
-        </>
+                {step === 2 && (
+                  <>
+
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <FormDescription>
+                        {"Great, now we need a way to get back to you."}
+                      </FormDescription>
+                      <FormControl>
+                        <Input
+                          placeholder="Enter your email"
+                          type="email"
+                          {...form.register("email")}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                      <div className="flex gap-x-4">
+                        <Button variant={"outline"} onClick={() => setStep(1)}>Previous</Button>
+                        <Button
+                          disabled={!!form.formState.errors.email || form.getValues("email") === ""}
+                          onClick={() => setStep(3)}
+                        >
+                          Next
+                        </Button>
+                      </div>
+                    </FormItem>
+
+                  </>
+                )}
+
+                {step === 3 && (
+                  <>
+                    <FormItem>
+                      <FormLabel>Message</FormLabel>
+                      <FormDescription>
+                        {"Now the fun part, tell us all the details!"}
+                      </FormDescription>
+                      <FormControl>
+                        <Textarea
+                          className="min-h-[100px]"
+                          placeholder="Enter your message"
+                          {...form.register("message")}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                      <div className="flex gap-x-4">
+                        <Button variant={"outline"} onClick={() => setStep(2)}>Previous</Button>
+                        <Button
+                          type="submit"
+                          disabled={!!form.formState.errors.message || form.getValues("message") === ""}
+                        >
+                          Submit
+                        </Button>
+                      </div>
+                    </FormItem>
+
+
+                  </>
+                )}
+              </CardContent>
+            </Card>
+          </form>
+        </Form>
       }
-
     </main>
   )
 }
