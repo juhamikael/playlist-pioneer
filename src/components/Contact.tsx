@@ -1,7 +1,6 @@
 "use client"
 import { Badge } from "@/components/ui/badge"
 import { CardHeader, CardContent, Card } from "@/components/ui/card"
-import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
@@ -59,7 +58,7 @@ export function Contact() {
       <div className="flex items-center gap-x-4 hover:cursor-pointer"
         onClick={() => setShowContact(!showContact)}
       >
-        <h1>Contact</h1>
+        <h1 id="contact">Contact</h1>
         {!showContact ?
           <ChevronRightCircle className="w-6 h-6" /> : <ChevronDownCircle className="w-6 h-6" />
         }
@@ -90,7 +89,7 @@ export function Contact() {
                             {"We promise this won't take long. Let's start with your name."}
                           </FormDescription>
                           <FormControl>
-                            <Input placeholder="shadcn" {...field} />
+                            <Input placeholder="John Doe" {...field} />
                           </FormControl>
                           <FormMessage />
                           <Button

@@ -42,7 +42,7 @@ const Links = [
     },
     {
         label: "Contact",
-        url: "/contact",
+        url: "/about#contact",
     },
 ]
 
