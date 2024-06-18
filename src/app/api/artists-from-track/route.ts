@@ -65,12 +65,21 @@ const trackFeatures = (currentFeatures: TFeatures) => {
 
 export async function GET(req: NextRequest) {
     const { searchParams } = req.nextUrl;
-    const cookie = cookies().get("spotify-access-token");
+    const accessToken = cookies().get("spotify-access-token");
     const track = searchParams.get("trackId");
     let parsedData = {
         artistName: "",
         artistId: "",
         trackId: ""
+    }
+
+    if (!accessToken) {
+        return NextResponse.json({
+            status: 400,
+            body: {
+                message: "You need to be logged in to access this route"
+            }
+        });
     }
 
     if (!track) {
@@ -84,7 +93,7 @@ export async function GET(req: NextRequest) {
     const res = await fetch(`${baseUrl}/tracks/${track}`,
         {
             headers: {
-                Authorization: `Bearer ${cookie?.value}`
+                Authorization: `Bearer ${accessToken?.value}`
             }
         }
     )
@@ -92,13 +101,12 @@ export async function GET(req: NextRequest) {
     const audioFeatures = await fetch(`${baseUrl}/audio-features/${track}`,
         {
             headers: {
-                Authorization: `Bearer ${cookie?.value}`
+                Authorization: `Bearer ${accessToken?.value}`
             }
         }
     )
     const audioFeaturesData = await audioFeatures.json();
     const features = trackFeatures(audioFeaturesData);
-
     if (data.artists.length === 1) {
         parsedData = {
             artistName: data.artists[0].name,
