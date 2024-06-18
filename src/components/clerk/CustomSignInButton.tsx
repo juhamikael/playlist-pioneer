@@ -11,7 +11,7 @@ const CustomSignInButton = ({
     buttonVariant?: Variants
 }) => {
     return (
-        <SignInButton afterSignInUrl="/">
+        <SignInButton forceRedirectUrl="/">
             <Button className="p-4" variant={buttonVariant.variant}>
                 {buttonText}
             </Button>

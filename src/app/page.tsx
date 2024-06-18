@@ -1,4 +1,4 @@
-import { currentUser } from "@clerk/nextjs";
+import { currentUser } from '@clerk/nextjs/server';
 import { getToken } from "@/utils/getToken"
 
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";

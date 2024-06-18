@@ -1,5 +1,6 @@
 "use client"
-import { UserButton, currentUser, auth, useUser } from "@clerk/nextjs";
+import { UserButton, useUser } from "@clerk/nextjs";
+import { currentUser, auth } from "@clerk/nextjs/server";
 import CustomSignInButton from "@/components/clerk/CustomSignInButton"
 import MaxWidthWrapper from "../MaxWidthWrapper";
 import Logo from "../global/Logo";
