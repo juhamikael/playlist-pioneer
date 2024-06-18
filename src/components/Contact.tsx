@@ -11,7 +11,6 @@ import { ChevronRightCircle, ChevronDownCircle } from "lucide-react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-
 import {
   Form,
   FormControl,
@@ -21,6 +20,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
+import { toast } from "sonner"
 
 const formSchema = z.object({
   name: z.string().min(2).max(50),
@@ -46,10 +46,19 @@ export function Contact() {
   })
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    fetch("/api/contact", {
-      method: "POST",
-      body: JSON.stringify(values)
-    })
+    try {
+
+      fetch("/api/contact", {
+        method: "POST",
+        body: JSON.stringify(values)
+      })
+      form.reset()
+      window.scrollTo(0, 0)
+      setStep(1)
+      toast.success("Message sent!")
+    } catch (error) {
+      toast.error("Something went wrong. Please try again later.")
+    }
 
   }
 
