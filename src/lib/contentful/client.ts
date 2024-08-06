@@ -1,6 +1,6 @@
 import { createClient } from "contentful"
 import { config } from 'dotenv';
-config({ path: '.env.local' });
+config({ path: '.env' });
 
 export const client = createClient({
     space: process.env.CONTENTFUL_SPACE_ID!,
